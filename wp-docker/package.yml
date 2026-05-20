@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/espanso/espanso/dev/schemas/match.schema.json
+
+matches:
+  # WP-CLI access via Docker Compose local dev setup
+  - triggers: [":docker.compose.run:", ":dcr:", ":wp.cli:"]
+    replace: "docker compose run --rm cli"
+    label: "WP-CLI: run via Docker Compose"

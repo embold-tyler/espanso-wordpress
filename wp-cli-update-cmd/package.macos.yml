@@ -1,0 +1,11 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/espanso/espanso/dev/schemas/match.schema.json
+global_vars:
+  - name: espanso_config_d
+    type: shell
+    params:
+      cmd: "echo $CONFIG"
+      shell: "bash"
+  - name: slash
+    type: echo
+    params:
+      echo: '/'

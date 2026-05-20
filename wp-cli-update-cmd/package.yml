@@ -1,0 +1,114 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/espanso/espanso/dev/schemas/match.schema.json
+global_vars:
+  - name: espanso_packages_d
+    type: echo
+    params:
+      echo: "{{espanso_config_d}}{{slash}}match{{slash}}packages"
+  - name: em_wp_d
+    type: echo
+    params:
+      echo: "{{espanso_packages_d}}{{slash}}embold-wordpress"
+  - name: em_wp_cli_update_cmd_d
+    type: echo
+    params:
+      echo: "{{em_wp_d}}{{slash}}wp-cli-update-cmd"
+  - name: process_wp_cli_update_output_script
+    type: echo
+    params:
+      echo: "{{em_wp_cli_update_cmd_d}}{{slash}}process_wp_cli_update_output.py"
+
+matches:
+  - triggers: [":wp.list:", ":wp.ls:"]
+    label: "WP Plugin/Theme List"
+    replace: "wp {{form.type}} list --name={{form.name}} --format=json"
+    vars:
+      - name: form
+        type: form
+        params:
+          layout: |
+            [[name]]
+            [[type]]
+          fields:
+            type:
+              type: choice
+              values:
+                - plugin
+                - theme
+              default: plugin
+
+  - triggers: [":wp.list.plugin:", ":wp.ls.plugin:", ":wp.ls.p:"]
+    label: "WP Plugin List"
+    replace: "wp plugin list --name={{form.name}} --format=json"
+    vars:
+      - name: form
+        type: form
+        params:
+          layout: |
+            [[name]]
+
+  - triggers: [":wp.list.theme:", ":wp.ls.theme:", ":wp.ls.t:"]
+    label: "WP Plugin List"
+    replace: "wp theme list --name={{form.name}} --format=json"
+    vars:
+      - name: form
+        type: form
+        params:
+          layout: |
+            [[name]]
+
+  - trigger: ":wp.up:"
+    label: "WP Plugin/Theme update (from JSON in clipboard)"
+    replace: "{{output}}"
+    vars:
+      - name: form
+        type: form
+        params:
+          layout: |
+            [[type]]
+          fields:
+            type:
+              type: choice
+              values:
+                - plugin
+                - theme
+              default: plugin
+      - name: clipboard
+        type: clipboard
+      - name: output
+        type: script
+        params:
+          args:
+            - python
+            - "{{process_wp_cli_update_output_script}}"
+            - "{{form.type}}"
+            - "--json={{clipboard}}"
+
+  - triggers: [":wp.up.plugin:", ":wp.up.p:"]
+    label: "WP Plugin update (from JSON in clipboard)"
+    replace: "{{output}}"
+    vars:
+      - name: clipboard
+        type: clipboard
+      - name: output
+        type: script
+        params:
+          args:
+            - python
+            - "{{process_wp_cli_update_output_script}}"
+            - "plugin"
+            - "--json={{clipboard}}"
+
+  - triggers: [":wp.up.theme:", ":wp.up.t:"]
+    label: "WP Theme update (from JSON in clipboard)"
+    replace: "{{output}}"
+    vars:
+      - name: clipboard
+        type: clipboard
+      - name: output
+        type: script
+        params:
+          args:
+            - python
+            - "{{process_wp_cli_update_output_script}}"
+            - "theme"
+            - "--json={{clipboard}}"

@@ -1,0 +1,5 @@
+name: "wp-cli-update-cmd"
+title: "WordPress CLI Update Command Generator"
+description: "Generate a command from WP CLI output to update and commit a plugin or theme."
+version: 0.1.0
+author: embold-tyler

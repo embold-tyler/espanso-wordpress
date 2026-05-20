@@ -1,0 +1,5 @@
+name: "wp-remote-asset-htaccess"
+title: "Remote Asset .htaccess Generator"
+description: "Generate WordPress .htaccess rules to load remote assets in development."
+version: 0.1.0
+author: embold-tyler

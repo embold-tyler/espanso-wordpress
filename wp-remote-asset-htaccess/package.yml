@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/espanso/espanso/dev/schemas/match.schema.json
+matches:
+  - triggers: [":wp.remote.asset.htaccess:", ":wp.rah:"]
+    label: "Htaccess snippet to load remote assets on local"
+    replace: |
+      <IfModule mod_rewrite.c>
+          RewriteEngine On
+
+          # Load local files if they exist
+          RewriteCond %{REQUEST_URI} ^/wp-content/([^\/]*)/((.*))$
+          RewriteCond %{DOCUMENT_ROOT}/wp-content/%1/%2 -f
+          RewriteRule ^(.*)$ $1 [QSA,L]
+
+          # If they don't exist, load the file from production
+          RewriteCond %{REQUEST_URI} ^/wp-content/([^\/]*)/.*$
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteCond %{REQUEST_FILENAME} !-d
+          RewriteRule ^(.*)$ https://{{form.domain}}/$1 [QSA,L]
+      </IfModule>
+    vars:
+      - name: form
+        type: form
+        params:
+          layout: |
+            Domain: https://[[domain]]

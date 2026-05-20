@@ -1,0 +1,5 @@
+name: "wp-htaccess"
+title: "WP Default .htaccess"
+description: "Outputs the default WordPress .htaccess snippet."
+version: 0.1.0
+author: embold-tyler
